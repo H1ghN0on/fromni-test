@@ -10,6 +10,7 @@ export type Channel = {
   name: string;
   accessor: string;
   icon: IconType;
+  color: string;
 };
 
 type Context = {

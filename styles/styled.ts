@@ -93,3 +93,51 @@ export const ModalChannelCardName = styled.h3`
   font-size: 1em;
   font-weight: bold;
 `;
+
+export const MainAside = styled.aside`
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 15vw;
+`;
+
+export const ChannelList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+interface ChannelProps {
+  active: Boolean;
+  background: string;
+}
+
+export const Channel = styled.div<ChannelProps>`
+  cursor: pointer;
+  box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.2);
+  background: ${(props) => (props.active ? props.background : "none")};
+  color: ${(props) => (props.active ? "white" : "inherit")};
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
+  transition: background 0.1s, color 0.1s;
+  &:first-child {
+    margin-top: 0;
+  }
+`;
+
+export const ChannelName = styled.span`
+  font-size: 1em;
+`;
+
+export const ChannelAvatar = styled.div`
+  margin-right: 10px;
+  font-size: 1.3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
