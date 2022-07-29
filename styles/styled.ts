@@ -121,13 +121,18 @@ export const Channel = styled.div<ChannelProps>`
   border-radius: 0 20px 20px 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 10px;
+  padding-right: 15px;
   width: 100%;
   margin-top: 10px;
   transition: background 0.1s, color 0.1s;
   &:first-child {
     margin-top: 0;
-  }
+`;
+
+export const ChannelInfo = styled.div`
+  display: flex;
 `;
 
 export const ChannelName = styled.span`
@@ -140,6 +145,13 @@ export const ChannelAvatar = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const ChannelEnableIcon = styled.div`
+  font-size: 0.6em;
+  align-self: center;
+  position: relative;
+  top: 2px;
 `;
 
 export const MainContent = styled.main`
@@ -187,8 +199,20 @@ export const MessageSizeLabel = styled.span`
   align-self: end;
   border: 2px solid #52a1e1;
   padding: 5px;
+  border-color: ${(props) => props.theme.color};
   border-radius: 10px;
 `;
+
+export const ChannelEnabler = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 20px;
+  }
+`;
+
+export const ChannelEnablerTitle = styled.h3``;
 
 interface DroppableIconProps {
   active: Boolean;
@@ -197,7 +221,7 @@ interface DroppableIconProps {
 export const DroppableOption = styled.div``;
 
 export const DroppableButton = styled.h3`
-  background: #52a1e1;
+  background: ${(props) => props.theme.color};
   padding: 10px 20px;
   border-radius: 10px;
   color: white;
@@ -241,10 +265,10 @@ export const Switch = styled.input`
   box-shadow: inset 0 0 5px rgba (0, 0, 0, 0.2);
   transition: 0.5s;
   -webkit-transition: 0.5s;
-  -webkit-box-shadow: 0px 0px 9px 0px #52a1e1;
-  -moz-box-shadow: 0px 0px 9px 0px #52a1e1;
-  box-shadow: 0px 0px 9px 0px #52a1e1;
-
+  box-shadow: ${(props) => "0px 0px 9px 0px " + props.theme.color};
+  &:checked {
+    background: ${(props) => props.theme.color};
+  }
   &:before {
     content: "";
     position: absolute;
@@ -253,13 +277,14 @@ export const Switch = styled.input`
     border-radius: 50%;
     top: 5px;
     left: 5px;
-    background: #52a1e1;
+    background: ${(props) => props.theme.color};
     transition: 0.5s;
     transform: scale(1.1);
     box-shadow: 0 0px 5px #52a1e1;
   }
   &:checked:before {
     left: 43px;
+    background: white;
   }
 `;
 
@@ -272,7 +297,7 @@ export const KeyboardButtonAdd = styled.div`
   display: flex;
   align-items: center;
   height: 50px;
-  background: #52a1e1;
+  background: ${(props) => props.theme.color};
   padding-right: 5px;
   justify-content: space-between;
   margin-bottom: 15px;
@@ -296,6 +321,7 @@ export const KeyboardButtonInput = styled.input`
   height: 100%;
   outline: none;
   border: 4px solid #52a1e1;
+  border-color: ${(props) => props.theme.color};
   border-radius: 15px;
   margin: 0 10px;
   padding-left: 10px;
@@ -324,7 +350,7 @@ export const Dropdown = styled.div`
   background: white;
   padding: 1em;
   height: 100%;
-  background: #52a1e1;
+  background: ${(props) => props.theme.color};
   color: white;
   border: none;
 `;
@@ -375,7 +401,7 @@ export const KeyboardButtonTool = styled.div`
 export const KeyboardButton = styled.div`
   display: flex;
   height: 45px;
-  background: #52a1e1;
+  background: ${(props) => props.theme.color};
   border-radius: 30px;
   padding: 15px;
   align-items: center;
@@ -436,7 +462,7 @@ export const KeyboardButtonSize = styled.div<KeyboardButtonSizeProps>`
   border: 2px solid #52a1e1;
   padding: 10px;
   border-radius: 10px;
-  border-color: ${(props) => (props.error ? "red" : "#52a1e1")};
+  border-color: ${(props) => (props.error ? "red" : props.theme.color)};
   color: ${(props) => (props.error ? "red" : "inherit")};
   transition: 0.2s;
 `;
@@ -447,7 +473,7 @@ export const KeyboardButtonListWrapper = styled.div`
 `;
 
 export const ContentButton = styled.button`
-  background: #52a1e1;
+  background: ${(props) => props.theme.color};
   color: white;
   text-align: center;
   padding: 20px 30px;

@@ -11,6 +11,25 @@ export type Channel = {
   accessor: string;
   icon: IconType;
   color: string;
+  message: {
+    limit?: number;
+  };
+  keyboard: {
+    support: boolean;
+    standard: {
+      limit?: number;
+      lengthLimit?: number;
+      urlSupport: boolean;
+      urlLimit?: number;
+    };
+
+    inline: {
+      limit?: number;
+      lengthLimit?: number;
+      urlSupport: boolean;
+      urlLimit?: number;
+    };
+  };
 };
 
 type Context = {

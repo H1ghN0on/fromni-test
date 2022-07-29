@@ -24,7 +24,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({
         value={value}
         onChange={handleValueChange}
       />
-      <S.MessageSizeLabel>{value.length + "/" + maxSize}</S.MessageSizeLabel>
+      <S.MessageSizeLabel>
+        {value.length + "/" + (maxSize === Infinity ? "∞" : maxSize)}
+      </S.MessageSizeLabel>
     </S.MessageBox>
   );
 };

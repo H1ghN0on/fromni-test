@@ -3,6 +3,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import * as S from "../styles/styled";
 import KeyboardButton from "./KeyboardButton";
 import KeyboardButtonAdd, { KeyboardButtonType } from "./KeyboardButtonAdd";
+import { keyboardTypes } from "./Main/Content";
 import Switch from "./Switch";
 
 export type KeyboardTypeType = {
@@ -23,6 +24,8 @@ interface KeyboardBoxProps {
   onButtonEdit: (button: KeyboardButtonType) => void;
   onButtonDelete: (button: KeyboardButtonType) => void;
   items: KeyboardButtonType[];
+  keyboardType: KeyboardTypeType;
+  urlSupport: boolean;
 }
 
 const KeyboardBox: React.FC<KeyboardBoxProps> = ({
@@ -33,16 +36,10 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
   onButtonDelete,
   onButtonEdit,
   items,
+  keyboardType,
+  urlSupport,
 }) => {
   const [forEdit, setForEdit] = React.useState<KeyboardButtonType | null>(null);
-
-  const keyboardTypes: KeyboardTypeType[] = [
-    {
-      name: "Стандартная",
-      accessor: "standard",
-    },
-    { name: "Inline", accessor: "inline" },
-  ];
 
   return (
     <>
@@ -51,8 +48,10 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
           prop1={keyboardTypes[0]}
           prop2={keyboardTypes[1]}
           onChange={onKeyboardChange}
+          checked={keyboardType === keyboardTypes[1]}
         />
         <KeyboardButtonAdd
+          urlSupport={urlSupport}
           maxButtonLength={maxButtonLength}
           onButtonAdd={onButtonAdd}
           buttonForEdit={forEdit}
@@ -78,7 +77,9 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
               ))}
           </S.KeyboardButtonList>
           <S.KeyboardButtonSize error={items.length > maxButtonNumber}>
-            {items.length + "/" + maxButtonNumber}
+            {items.length +
+              "/" +
+              (maxButtonNumber === Infinity ? "∞" : maxButtonNumber)}
           </S.KeyboardButtonSize>
         </S.KeyboardButtonListWrapper>
       </S.KeyboardButtonWrapper>

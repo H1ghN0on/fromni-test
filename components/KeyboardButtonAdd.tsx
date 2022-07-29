@@ -15,6 +15,7 @@ interface KeyboardButtonAddProps {
   onButtonAdd: (button: Omit<KeyboardButtonType, "id">) => void;
   buttonForEdit: KeyboardButtonType | null;
   onButtonEdit: (button: KeyboardButtonType) => void;
+  urlSupport: boolean;
 }
 
 const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
@@ -22,13 +23,14 @@ const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
   onButtonAdd,
   buttonForEdit,
   onButtonEdit,
+  urlSupport,
 }) => {
   const keyboardMessageTypes: KeyboardButtonTypeType[] = [
     {
-      name: "URL",
-      accessor: "url",
+      name: "Текст",
+      accessor: "text",
     },
-    { name: "Текст", accessor: "text" },
+    { name: "URL", accessor: "url" },
   ];
 
   React.useEffect(() => {
@@ -37,6 +39,12 @@ const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
       setActiveType(buttonForEdit.type);
     }
   }, [buttonForEdit]);
+
+  React.useEffect(() => {
+    if (!urlSupport) {
+      setActiveType(keyboardMessageTypes[0]);
+    }
+  }, [urlSupport]);
 
   const [value, setValue] = React.useState<string>("");
   const [activeType, setActiveType] = React.useState<KeyboardButtonTypeType>(
@@ -69,7 +77,11 @@ const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
           onChange={(type) => {
             setActiveType(type);
           }}
-          items={keyboardMessageTypes}
+          items={
+            urlSupport
+              ? keyboardMessageTypes
+              : keyboardMessageTypes.filter((type) => type.accessor !== "url")
+          }
           active={activeType}
         />
       </S.KeyboardDropdown>
@@ -80,7 +92,9 @@ const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
           value={value}
         />
         <S.KeyboardButtonInputSize>
-          {value.length + "/" + maxButtonLength}
+          {value.length +
+            "/" +
+            (maxButtonLength === Infinity ? "∞" : maxButtonLength)}
         </S.KeyboardButtonInputSize>
       </S.KeyboardButtonInputWrapper>
 
