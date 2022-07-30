@@ -7,31 +7,34 @@ class ChannelController {
     try {
       const name = req.params.name;
       const user = await User.findOne({ name });
-
       if (user) {
         const vk = await Channel.findById(user.channels.vk.settings);
         const wa = await Channel.findById(user.channels.wa.settings);
         const tg = await Channel.findById(user.channels.tg.settings);
         const sms = await Channel.findById(user.channels.sms.settings);
 
-        res.status(200).json({
-          vk: {
+        res.status(200).json([
+          {
+            accessor: "vk",
             enabled: user.channels.vk.enabled,
             settings: vk,
           },
-          wa: {
+          {
+            accessor: "wa",
             enabled: user.channels.wa.enabled,
             settings: wa,
           },
-          tg: {
+          {
+            accessor: "tg",
             enabled: user.channels.tg.enabled,
             settings: tg,
           },
-          sms: {
+          {
+            accessor: "sms",
             enabled: user.channels.sms.enabled,
             settings: sms,
           },
-        });
+        ]);
       } else {
         res
           .status(500)
@@ -67,15 +70,20 @@ class ChannelController {
   async update(req: express.Request, res: express.Response) {
     try {
       const { name, channelInfo } = req.body;
-
+      console.log(channelInfo);
       const user = await User.findOne({ name });
 
       if (user) {
         await Channel.findByIdAndUpdate(
-          user.channels[channelInfo.accessor as "vk" | "wa" | "tg" | "sms"]
+          user.channels[channelInfo.info.accessor as "vk" | "wa" | "tg" | "sms"]
             .settings,
-
-          channelInfo
+          {
+            message: channelInfo.message,
+            keyboard: {
+              type: channelInfo.keyboardType.accessor,
+              buttons: channelInfo.buttons,
+            },
+          }
         );
         res.status(200).json({ status: "OK" });
       } else {

@@ -1,13 +1,16 @@
 import mongoose from "mongoose";
 
 const buttonSchema = new mongoose.Schema({
-  text: {
+  name: {
     type: String,
     required: true,
   },
 
   type: {
-    type: String,
+    type: {
+      name: String,
+      accessor: String,
+    },
     validate: {
       validator: (v: string) => {
         return v === "url" || v === "text";

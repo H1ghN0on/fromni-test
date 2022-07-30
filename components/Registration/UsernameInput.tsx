@@ -1,17 +1,33 @@
+import { useRouter } from "next/router";
 import React from "react";
+import { Api } from "../../api";
 import { NewUserContext } from "../../contexts/NewUserContext";
 import * as S from "../../styles/styled";
 
 const UsernameInput = () => {
-  const userData = React.useContext(NewUserContext);
-  const [name, setName] = React.useState<string>("");
+  const router = useRouter();
 
-  const handleNextBtnClick = () => {
+  const userData = React.useContext(NewUserContext);
+
+  const handleNextBtnClick = async () => {
+    const exists = await Api().checkNameExistence(userData.name);
+    if (exists) {
+      router.push(`${userData.name}`);
+      return;
+    }
     userData.setContext({
       ...userData,
       currentFragment: userData.currentFragment + 1,
     });
   };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    userData.setContext({
+      ...userData,
+      name: e.target.value,
+    });
+  };
+
   return (
     <>
       <S.ModalTitle>Добрый день 👋</S.ModalTitle>
@@ -19,13 +35,11 @@ const UsernameInput = () => {
         <S.InputLabel>Введите имя</S.InputLabel>
         <S.Input
           placeholder="Имя..."
-          value={name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setName(e.target.value);
-          }}
+          value={userData.name}
+          onChange={handleNameChange}
         />
       </S.InputBox>
-      <S.Button onClick={handleNextBtnClick} disabled={!name}>
+      <S.Button onClick={handleNextBtnClick} disabled={!userData.name}>
         Далее
       </S.Button>
     </>

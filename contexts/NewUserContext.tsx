@@ -8,7 +8,7 @@ type Props = {
 export type Channel = {
   id: number;
   name: string;
-  accessor: string;
+  accessor: "vk" | "tg" | "sms" | "wa";
   icon: IconType;
   color: string;
   message: {

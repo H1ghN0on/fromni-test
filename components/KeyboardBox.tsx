@@ -48,7 +48,7 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
           prop1={keyboardTypes[0]}
           prop2={keyboardTypes[1]}
           onChange={onKeyboardChange}
-          checked={keyboardType === keyboardTypes[1]}
+          checked={keyboardType.accessor === keyboardTypes[1].accessor}
         />
         <KeyboardButtonAdd
           urlSupport={urlSupport}

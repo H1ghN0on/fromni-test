@@ -17,41 +17,52 @@ export type ChannelInfoType = {
   keyboardType: KeyboardTypeType;
 };
 
-const Main = () => {
-  const [channelsInfo, setChannelsInfo] = React.useState<ChannelInfoType[]>([
-    {
-      info: channels.find((channel) => channel.accessor === "vk")!,
-      enabled: false,
-      active: true,
-      message: "",
-      buttons: [],
-      keyboardType: { name: "Стандартная", accessor: "standard" },
-    },
-    {
-      info: channels.find((channel) => channel.accessor === "wa")!,
-      enabled: false,
+export type ChannelSettingsType = {
+  accessor: "vk" | "wa" | "tg" | "sms";
+  enabled: boolean;
+  settings: {
+    keyboard: {
+      type: "standard" | "inline";
+      buttons: KeyboardButtonType[];
+    };
+    message: "";
+  };
+};
+
+interface MainProps {
+  _channels: ChannelSettingsType[];
+}
+
+const Main: React.FC<MainProps> = ({ _channels }) => {
+  const [channelsInfo, setChannelsInfo] = React.useState<ChannelInfoType[]>(
+    _channels.map((channel) => ({
+      info: channels.find(
+        (_channel) => channel.accessor === _channel.accessor
+      )!,
+      enabled: channel.enabled,
       active: false,
-      message: "",
-      buttons: [],
-      keyboardType: { name: "Стандартная", accessor: "standard" },
-    },
-    {
-      info: channels.find((channel) => channel.accessor === "tg")!,
-      enabled: false,
-      active: false,
-      message: "",
-      buttons: [],
-      keyboardType: { name: "Стандартная", accessor: "standard" },
-    },
-    {
-      info: channels.find((channel) => channel.accessor === "sms")!,
-      enabled: false,
-      active: false,
-      message: "",
-      buttons: [],
-      keyboardType: { name: "Стандартная", accessor: "standard" },
-    },
-  ]);
+      message: channel.settings.message,
+      buttons: channel.settings.keyboard.buttons,
+      keyboardType: (() => {
+        if (channel.settings.keyboard.type === "standard") {
+          return {
+            name: "Стандартная",
+            accessor: "standard",
+          };
+        } else if (channel.settings.keyboard.type === "inline") {
+          return {
+            name: "Inline",
+            accessor: "inline",
+          };
+        } else {
+          return {
+            name: "Стандартная",
+            accessor: "standard",
+          };
+        }
+      })(),
+    }))
+  );
 
   const handleChannelClick = (_channel: Channel) => {
     setChannelsInfo(

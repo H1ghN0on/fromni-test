@@ -6,6 +6,7 @@ import ChannelInput from "./ChannelInput";
 
 const Fragment = () => {
   const userData = React.useContext(NewUserContext);
+
   switch (userData.currentFragment) {
     case 0: {
       return <UsernameInput />;

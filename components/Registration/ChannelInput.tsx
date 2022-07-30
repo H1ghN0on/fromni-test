@@ -1,9 +1,13 @@
+import { useRouter } from "next/router";
 import React from "react";
+import { Api } from "../../api";
 import { Channel, NewUserContext } from "../../contexts/NewUserContext";
 import channels from "../../public/Channels";
 import * as S from "../../styles/styled";
 import ModalChannelCard from "./ModalChannelCard";
 const ChannelInput = () => {
+  const router = useRouter();
+
   const userData = React.useContext(NewUserContext);
   const [activeChannels, setActiveChannels] = React.useState<Channel[]>([]);
 
@@ -16,7 +20,12 @@ const ChannelInput = () => {
   };
 
   const handleNextBtnClick = async () => {
-    //send to backend
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+    await Api().addUser({ name: userData.name, channels: activeChannels });
+    router.push(`${userData.name}`);
   };
 
   return (
@@ -33,7 +42,12 @@ const ChannelInput = () => {
             />
           ))}
       </S.ModalChannelChoice>
-      <S.Button disabled={activeChannels.length === 0}>Далее</S.Button>
+      <S.Button
+        disabled={activeChannels.length === 0}
+        onClick={handleNextBtnClick}
+      >
+        Далее
+      </S.Button>
     </>
   );
 };

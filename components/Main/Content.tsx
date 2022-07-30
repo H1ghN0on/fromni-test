@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import { ChannelInfoType } from ".";
+import { Api } from "../../api";
 import { Channel } from "../../contexts/NewUserContext";
 import * as S from "../../styles/styled";
 import Droppable from "../Droppable";
@@ -64,21 +65,39 @@ const Content: React.FC<ContentProps> = ({
     });
   };
 
-  const handleSaveClick = () => {};
+  const handleSaveClick = async () => {
+    await Api().updateChannel({
+      name: "Kyle5",
+      channelInfo,
+    });
+  };
+
+  const handleEnableChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateChannelInfo({
+      ...channelInfo,
+      enabled: e.target.checked,
+    });
+
+    try {
+      await Api().enableChannel({
+        name: "Kyle5",
+        channel: channelInfo.info.accessor,
+        enabled: e.target.checked,
+      });
+    } catch (error) {
+      alert("Ошибка случилась");
+      console.log(error);
+    }
+  };
 
   return (
-    <ThemeProvider theme={{ color: channelInfo.info.color }}>
+    <ThemeProvider theme={{ color: channelInfo?.info.color }}>
       <S.MainContent>
         {channelInfo && (
           <>
             <S.ChannelEnabler>
               <S.Switch
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  updateChannelInfo({
-                    ...channelInfo,
-                    enabled: e.target.checked,
-                  });
-                }}
+                onChange={handleEnableChange}
                 type="checkbox"
                 checked={channelInfo.enabled}
               />
@@ -157,7 +176,7 @@ const Content: React.FC<ContentProps> = ({
                   !channelInfo.info.keyboard.support ||
                   channelInfo.info.keyboard[
                     channelInfo.keyboardType.accessor as "standard" | "inline"
-                  ].lengthLimit! > channelInfo.buttons.length
+                  ].limit! < channelInfo.buttons.length
                 }
                 onClick={handleSaveClick}
               >
