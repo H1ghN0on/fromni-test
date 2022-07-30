@@ -72,9 +72,6 @@ const Content: React.FC<ContentProps> = ({
         {channelInfo && (
           <>
             <S.ChannelEnabler>
-              <S.ChannelEnablerTitle>
-                {channelInfo.enabled ? "Включен" : "Выключен"}
-              </S.ChannelEnablerTitle>
               <S.Switch
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   updateChannelInfo({
@@ -85,6 +82,9 @@ const Content: React.FC<ContentProps> = ({
                 type="checkbox"
                 checked={channelInfo.enabled}
               />
+              <S.ChannelEnablerTitle>
+                {channelInfo.enabled ? "Включен" : "Выключен"}
+              </S.ChannelEnablerTitle>
             </S.ChannelEnabler>
             <Droppable name="Сообщение">
               <MessageBox
