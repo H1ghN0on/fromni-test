@@ -1,7 +1,8 @@
 import React from "react";
-import { KeyboardButtonType } from "./KeyboardButtonAdd";
-import * as S from "../styles/styled";
 import { MdDelete, MdEdit } from "react-icons/md";
+
+import * as S from "@styles/styled";
+import { KeyboardButtonType } from "@types";
 
 interface KeyboardButtonProps {
   onEdit: (item: KeyboardButtonType) => void;

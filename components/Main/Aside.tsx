@@ -1,12 +1,13 @@
 import React from "react";
-import { Channel } from "../../contexts/NewUserContext";
-import { ImCheckmark, ImCross } from "react-icons/im";
-import channels from "../../public/Channels";
-import * as S from "../../styles/styled";
-import { ChannelInfoType } from ".";
-import { BsEnvelopeFill } from "react-icons/bs";
-import { BiExit } from "react-icons/bi";
 import { useRouter } from "next/router";
+
+import { ImCheckmark, ImCross } from "react-icons/im";
+import { BsEnvelopeFill } from "react-icons/bs";
+import { BiExit, BiSave } from "react-icons/bi";
+
+import * as S from "@styles/styled";
+import { Channel, ChannelInfoType } from "@types";
+
 interface AsideProps {
   onChannelClick: (channel: Channel) => void;
   channelsInfo: ChannelInfoType[];
@@ -15,8 +16,20 @@ interface AsideProps {
 const Aside: React.FC<AsideProps> = ({ onChannelClick, channelsInfo }) => {
   const router = useRouter();
 
+  const handleChannelClick = (channel: ChannelInfoType) => {
+    onChannelClick(channel.info);
+  };
+
   const handleExitClick = () => {
-    router.push("/");
+    if (channelsInfo.findIndex((channel) => channel.unsaved) !== -1) {
+      if (
+        confirm("У вас остались не сохранённые изменение, всё равно выйти?")
+      ) {
+        router.push("/");
+      }
+    } else {
+      router.push("/");
+    }
   };
 
   return (
@@ -26,7 +39,7 @@ const Aside: React.FC<AsideProps> = ({ onChannelClick, channelsInfo }) => {
           channelsInfo.map((channel) => (
             <S.Channel
               onClick={() => {
-                onChannelClick(channel.info);
+                handleChannelClick(channel);
               }}
               background={channel.info.color}
               active={channel.active}
@@ -38,9 +51,14 @@ const Aside: React.FC<AsideProps> = ({ onChannelClick, channelsInfo }) => {
                 </S.ChannelAvatar>
                 <S.ChannelName>{channel.info.name}</S.ChannelName>
               </S.ChannelInfo>
-              <S.ChannelEnableIcon>
-                {channel.enabled ? <ImCheckmark /> : <ImCross />}
-              </S.ChannelEnableIcon>
+              <S.ChannelIcons>
+                <S.ChannelEnableIcon>
+                  {channel.enabled ? <ImCheckmark /> : <ImCross />}
+                </S.ChannelEnableIcon>
+                <S.ChannelSaveIcon>
+                  {channel.unsaved && <BiSave />}
+                </S.ChannelSaveIcon>
+              </S.ChannelIcons>
             </S.Channel>
           ))}
         <S.Channel

@@ -1,6 +1,6 @@
 import React from "react";
-import * as S from "../../styles/styled";
-import { NewUserContext } from "../../contexts/NewUserContext";
+import * as S from "@styles/styled";
+import { NewUserContext } from "@contexts/NewUserContext";
 import UsernameInput from "./UsernameInput";
 import ChannelInput from "./ChannelInput";
 

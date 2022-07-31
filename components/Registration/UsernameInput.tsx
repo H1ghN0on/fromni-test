@@ -1,15 +1,18 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { Api } from "../../api";
-import { NewUserContext } from "../../contexts/NewUserContext";
-import * as S from "../../styles/styled";
+import { Api } from "@api/index";
+import { NewUserContext } from "@contexts/NewUserContext";
+import * as S from "@styles/styled";
 
 const UsernameInput = () => {
+  const [isLoading, setLoading] = React.useState<boolean>(false);
+
   const router = useRouter();
 
   const userData = React.useContext(NewUserContext);
 
   const handleNextBtnClick = async () => {
+    setLoading(true);
     const exists = await Api().checkNameExistence(userData.name);
     if (exists) {
       router.push(`${userData.name}`);
@@ -19,6 +22,7 @@ const UsernameInput = () => {
       ...userData,
       currentFragment: userData.currentFragment + 1,
     });
+    setLoading(false);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +43,10 @@ const UsernameInput = () => {
           onChange={handleNameChange}
         />
       </S.InputBox>
-      <S.Button onClick={handleNextBtnClick} disabled={!userData.name}>
+      <S.Button
+        onClick={handleNextBtnClick}
+        disabled={!userData.name || isLoading}
+      >
         Далее
       </S.Button>
     </>

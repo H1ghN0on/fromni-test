@@ -1,6 +1,7 @@
 import React from "react";
-import * as S from "../../styles/styled";
-import { Channel } from "../../contexts/NewUserContext";
+import * as S from "@styles/styled";
+import {} from "@contexts/NewUserContext";
+import { Channel } from "@types";
 
 interface ModalChannelCardProps {
   channel: Channel;

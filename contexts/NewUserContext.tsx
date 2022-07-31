@@ -1,35 +1,8 @@
+import { Channel } from "@types";
 import React from "react";
-import { IconType } from "react-icons";
 
 type Props = {
   children: React.ReactNode;
-};
-
-export type Channel = {
-  id: number;
-  name: string;
-  accessor: "vk" | "tg" | "sms" | "wa";
-  icon: IconType;
-  color: string;
-  message: {
-    limit?: number;
-  };
-  keyboard: {
-    support: boolean;
-    standard: {
-      limit?: number;
-      lengthLimit?: number;
-      urlSupport: boolean;
-      urlLimit?: number;
-    };
-
-    inline: {
-      limit?: number;
-      lengthLimit?: number;
-      urlSupport: boolean;
-      urlLimit?: number;
-    };
-  };
 };
 
 type Context = {

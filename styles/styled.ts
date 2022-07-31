@@ -154,6 +154,13 @@ export const ChannelEnableIcon = styled.div`
   top: 2px;
 `;
 
+export const ChannelSaveIcon = styled.div`
+  font-size: 0.7m;
+  align-self: center;
+  position: relative;
+  top: 2px;
+`;
+
 export const MainContent = styled.main`
   width: 80vw;
   padding: 50px 100px;
@@ -492,4 +499,23 @@ export const ContentButton = styled.button`
 export const ContentButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+export const ChannelIcons = styled.div`
+  display: flex;
+  justify-content: end;
+  & > div {
+    margin-right: 5px;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+export const NoChannel = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
 `;

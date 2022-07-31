@@ -1,20 +1,11 @@
 import React from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
-import * as S from "../styles/styled";
-import KeyboardButton from "./KeyboardButton";
-import KeyboardButtonAdd, { KeyboardButtonType } from "./KeyboardButtonAdd";
-import { keyboardTypes } from "./Main/Content";
-import Switch from "./Switch";
+import * as S from "@styles/styled";
 
-export type KeyboardTypeType = {
-  name: string;
-  accessor: string;
-};
-
-export type KeyboardButtonTypeType = {
-  name: string;
-  accessor: string;
-};
+import KeyboardButton from "@components/Main/Keyboard/KeyboardButton";
+import KeyboardButtonAdd from "@components/Main/Keyboard/KeyboardButtonAdd";
+import { keyboardTypes } from "@components/Main/Content";
+import Switch from "@components/Common/Switch";
+import { KeyboardButtonType, KeyboardTypeType } from "@types";
 
 interface KeyboardBoxProps {
   maxButtonNumber: number;
@@ -41,6 +32,11 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
 }) => {
   const [forEdit, setForEdit] = React.useState<KeyboardButtonType | null>(null);
 
+  const handleButtonEdit = (item: KeyboardButtonType) => {
+    onButtonEdit(item);
+    setForEdit(null);
+  };
+
   return (
     <>
       <S.KeyboardButtonWrapper>
@@ -55,10 +51,7 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
           maxButtonLength={maxButtonLength}
           onButtonAdd={onButtonAdd}
           buttonForEdit={forEdit}
-          onButtonEdit={(item) => {
-            onButtonEdit(item);
-            setForEdit(null);
-          }}
+          onButtonEdit={handleButtonEdit}
         />
         <S.KeyboardButtonListWrapper>
           <S.KeyboardButtonList>
@@ -67,12 +60,8 @@ const KeyboardBox: React.FC<KeyboardBoxProps> = ({
                 <KeyboardButton
                   key={index}
                   item={button}
-                  onEdit={(item) => {
-                    setForEdit(item);
-                  }}
-                  onDelete={(item) => {
-                    onButtonDelete(item);
-                  }}
+                  onEdit={setForEdit}
+                  onDelete={onButtonDelete}
                 />
               ))}
           </S.KeyboardButtonList>

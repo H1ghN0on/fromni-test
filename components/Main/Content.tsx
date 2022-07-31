@@ -1,13 +1,13 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
-import { ChannelInfoType } from ".";
-import { Api } from "../../api";
-import { Channel } from "../../contexts/NewUserContext";
-import * as S from "../../styles/styled";
-import Droppable from "../Droppable";
-import KeyboardBox, { KeyboardTypeType } from "../KeyboardBox";
-import { KeyboardButtonType } from "../KeyboardButtonAdd";
-import MessageBox from "./MessageBox";
+import { useRouter } from "next/router";
+
+import { Api } from "@api/index";
+import * as S from "@styles/styled";
+import Droppable from "@components/Common/Dropdown/Droppable";
+import KeyboardBox from "@components/Main/Keyboard/KeyboardBox";
+import MessageBox from "@components/Main/MessageBox";
+import { ChannelInfoType, KeyboardButtonType, KeyboardTypeType } from "@types";
 
 interface ContentProps {
   channelInfo: ChannelInfoType;
@@ -26,6 +26,12 @@ const Content: React.FC<ContentProps> = ({
   updateChannelInfo,
   channelInfo,
 }) => {
+  const router = useRouter();
+
+  const handleMessageChange = (value: string) => {
+    updateChannelInfo({ ...channelInfo, message: value, unsaved: true });
+  };
+
   const handleButtonAdd = (button: Omit<KeyboardButtonType, "id">) => {
     updateChannelInfo({
       ...channelInfo,
@@ -35,6 +41,7 @@ const Content: React.FC<ContentProps> = ({
           id: channelInfo.buttons.length,
         },
       ]),
+      unsaved: true,
     });
   };
 
@@ -46,6 +53,7 @@ const Content: React.FC<ContentProps> = ({
           return button;
         } else return _button;
       }),
+      unsaved: true,
     });
   };
 
@@ -55,6 +63,7 @@ const Content: React.FC<ContentProps> = ({
       buttons: channelInfo.buttons.filter(
         (_button) => button.id !== _button.id
       ),
+      unsaved: true,
     });
   };
 
@@ -62,12 +71,17 @@ const Content: React.FC<ContentProps> = ({
     updateChannelInfo({
       ...channelInfo,
       keyboardType: type,
+      unsaved: true,
     });
   };
 
   const handleSaveClick = async () => {
+    updateChannelInfo({
+      ...channelInfo,
+      unsaved: false,
+    });
     await Api().updateChannel({
-      name: "Kyle5",
+      name: router.query.name as string,
       channelInfo,
     });
   };
@@ -77,10 +91,9 @@ const Content: React.FC<ContentProps> = ({
       ...channelInfo,
       enabled: e.target.checked,
     });
-
     try {
       await Api().enableChannel({
-        name: "Kyle5",
+        name: router.query.name as string,
         channel: channelInfo.info.accessor,
         enabled: e.target.checked,
       });
@@ -90,10 +103,16 @@ const Content: React.FC<ContentProps> = ({
     }
   };
 
+  const getKeyboardType = () => {
+    return channelInfo.info.keyboard[
+      channelInfo.keyboardType.accessor as "standard" | "inline"
+    ];
+  };
+
   return (
     <ThemeProvider theme={{ color: channelInfo?.info.color }}>
       <S.MainContent>
-        {channelInfo && (
+        {channelInfo ? (
           <>
             <S.ChannelEnabler>
               <S.Switch
@@ -112,9 +131,7 @@ const Content: React.FC<ContentProps> = ({
                   channelInfo.info.message &&
                   (channelInfo.info.message.limit ?? Infinity)
                 }
-                onChange={(value) =>
-                  updateChannelInfo({ ...channelInfo, message: value })
-                }
+                onChange={handleMessageChange}
               ></MessageBox>
             </Droppable>
             {channelInfo.info.keyboard.support && (
@@ -123,21 +140,9 @@ const Content: React.FC<ContentProps> = ({
                   <KeyboardBox
                     urlSupport={
                       channelInfo.info.keyboard.support &&
-                      channelInfo.info.keyboard[
-                        channelInfo.keyboardType.accessor as
-                          | "standard"
-                          | "inline"
-                      ].urlSupport &&
-                      (!channelInfo.info.keyboard[
-                        channelInfo.keyboardType.accessor as
-                          | "standard"
-                          | "inline"
-                      ].urlLimit ||
-                        channelInfo.info.keyboard[
-                          channelInfo.keyboardType.accessor as
-                            | "standard"
-                            | "inline"
-                        ].urlLimit! >
+                      getKeyboardType().urlSupport &&
+                      (!getKeyboardType().urlLimit ||
+                        getKeyboardType().urlLimit! >
                           channelInfo.buttons.filter(
                             (button) => button.type.accessor === "url"
                           ).length)
@@ -150,21 +155,11 @@ const Content: React.FC<ContentProps> = ({
                     onButtonDelete={handleDeleteButton}
                     maxButtonNumber={
                       channelInfo.info.keyboard.support &&
-                      (channelInfo.info.keyboard[
-                        channelInfo.keyboardType.accessor as
-                          | "standard"
-                          | "inline"
-                      ].limit ??
-                        Infinity)
+                      (getKeyboardType().limit ?? Infinity)
                     }
                     maxButtonLength={
                       channelInfo.info.keyboard.support &&
-                      (channelInfo.info.keyboard[
-                        channelInfo.keyboardType.accessor as
-                          | "standard"
-                          | "inline"
-                      ].lengthLimit ??
-                        Infinity)
+                      (getKeyboardType().lengthLimit ?? Infinity)
                     }
                   />
                 </Droppable>
@@ -174,9 +169,14 @@ const Content: React.FC<ContentProps> = ({
               <S.ContentButton
                 disabled={
                   !channelInfo.info.keyboard.support ||
-                  channelInfo.info.keyboard[
-                    channelInfo.keyboardType.accessor as "standard" | "inline"
-                  ].limit! < channelInfo.buttons.length
+                  getKeyboardType().limit! < channelInfo.buttons.length ||
+                  !channelInfo.unsaved ||
+                  channelInfo.buttons.findIndex(
+                    (button) =>
+                      channelInfo.info.keyboard.support &&
+                      (getKeyboardType().lengthLimit as number) <
+                        button.name.length
+                  ) !== -1
                 }
                 onClick={handleSaveClick}
               >
@@ -184,6 +184,8 @@ const Content: React.FC<ContentProps> = ({
               </S.ContentButton>
             </S.ContentButtonWrapper>
           </>
+        ) : (
+          <S.NoChannel>Выберите канал</S.NoChannel>
         )}
       </S.MainContent>
     </ThemeProvider>

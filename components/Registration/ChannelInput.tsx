@@ -1,11 +1,16 @@
-import { useRouter } from "next/router";
 import React from "react";
-import { Api } from "../../api";
-import { Channel, NewUserContext } from "../../contexts/NewUserContext";
-import channels from "../../public/Channels";
-import * as S from "../../styles/styled";
+import { useRouter } from "next/router";
+
+import { Api } from "@api/index";
+import { NewUserContext } from "@contexts/NewUserContext";
+import * as S from "@styles/styled";
 import ModalChannelCard from "./ModalChannelCard";
+
+import channels from "../../public/Channels";
+import { Channel } from "@types";
 const ChannelInput = () => {
+  const [isLoading, setLoading] = React.useState<boolean>(false);
+
   const router = useRouter();
 
   const userData = React.useContext(NewUserContext);
@@ -20,12 +25,15 @@ const ChannelInput = () => {
   };
 
   const handleNextBtnClick = async () => {
+    setLoading(true);
     try {
+      await Api().addUser({ name: userData.name, channels: activeChannels });
     } catch (error) {
       console.log(error);
     }
-    await Api().addUser({ name: userData.name, channels: activeChannels });
+
     router.push(`${userData.name}`);
+    setLoading(false);
   };
 
   return (
@@ -43,7 +51,7 @@ const ChannelInput = () => {
           ))}
       </S.ModalChannelChoice>
       <S.Button
-        disabled={activeChannels.length === 0}
+        disabled={activeChannels.length === 0 || isLoading}
         onClick={handleNextBtnClick}
       >
         Далее

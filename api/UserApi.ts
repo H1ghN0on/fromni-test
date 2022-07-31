@@ -1,5 +1,5 @@
+import { Channel } from "@types";
 import { AxiosInstance } from "axios";
-import { Channel } from "../contexts/NewUserContext";
 
 const UserApi = (instance: AxiosInstance) => {
   return {

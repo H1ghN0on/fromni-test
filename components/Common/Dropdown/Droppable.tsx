@@ -1,6 +1,7 @@
 import React from "react";
 import { RiArrowDownSFill } from "react-icons/ri";
-import * as S from "../styles/styled";
+
+import * as S from "@styles/styled";
 
 interface DroppableProps {
   name: string;

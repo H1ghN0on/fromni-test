@@ -1,14 +1,8 @@
 import React from "react";
 
-import * as S from "../styles/styled";
-import Dropdown from "./Dropdown";
-import { KeyboardButtonTypeType } from "./KeyboardBox";
-
-export type KeyboardButtonType = {
-  name: string;
-  type: KeyboardButtonTypeType;
-  id: number;
-};
+import * as S from "@styles/styled";
+import Dropdown from "@components/Common/Dropdown";
+import { KeyboardButtonType, KeyboardButtonTypeType } from "@types";
 
 interface KeyboardButtonAddProps {
   maxButtonLength: number;
@@ -56,17 +50,20 @@ const KeyboardButtonAdd: React.FC<KeyboardButtonAddProps> = ({
   };
 
   const handleButtonAdd = () => {
-    if (buttonForEdit) {
-      onButtonEdit({
-        id: buttonForEdit.id,
-        name: value,
-        type: activeType,
-      });
-    } else {
-      onButtonAdd({
-        name: value,
-        type: activeType,
-      });
+    if (value) {
+      if (buttonForEdit) {
+        onButtonEdit({
+          id: buttonForEdit.id,
+          name: value,
+          type: activeType,
+        });
+      } else {
+        onButtonAdd({
+          name: value,
+          type: activeType,
+        });
+      }
+      setValue("");
     }
   };
 

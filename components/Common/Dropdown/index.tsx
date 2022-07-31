@@ -1,6 +1,7 @@
 import React from "react";
 import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
-import * as S from "../styles/styled";
+
+import * as S from "@styles/styled";
 
 export type DropdownItemType = {
   name: string;
@@ -37,6 +38,12 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
 
 const Dropdown: React.FC<DropdownProps> = ({ items, active, onChange }) => {
   const [isActive, setActive] = React.useState<Boolean>(false);
+
+  const onDropdownItemClick = (item: DropdownItemType) => {
+    onChange(item);
+    setActive(false);
+  };
+
   return (
     <S.DropdownWrapper>
       <S.Dropdown
@@ -64,8 +71,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, active, onChange }) => {
                 item={item}
                 active={false}
                 onClick={(item: DropdownItemType) => {
-                  onChange(item);
-                  setActive(false);
+                  onDropdownItemClick(item);
                 }}
               />
             ))}
